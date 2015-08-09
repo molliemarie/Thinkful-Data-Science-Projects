@@ -1,6 +1,7 @@
 # Challenge: Write a script called "database.py" to print out the cities with the 
 # July being the warmest month. Your script must:
 
+# Define table variables
 cities = (('New York City', 'NY'),
     ('Boston', 'MA'),
     ('Chicago', 'IL'),
@@ -29,18 +30,77 @@ con = lite.connect('getting_started.db')
 
 # Create the cities and weather tables (HINT: first pass the statement DROP TABLE 
 # IF EXISTS <table_name>; to remove the table before you execute the CREATE TABLE ... statement)
-# DROP TABLE IF EXISTS cities
-# DROP TABLE IF EXISTS weather
 
 with con:
     cur = con.cursor()
-	cur.execute(DROP TABLE IF EXISTS cities);
-	cur.execute(DROP TABLE IF EXISTS weather);
+	cur.execute(DROP TABLE IF EXISTS cities)
+	cur.execute(DROP TABLE IF EXISTS weather)
 
+	cur.execute(CREATE TABLE cities (name text, state text))
+	cur.execute(CREATE TABLE weather(city text, year integer, warm_month text, cold_month text, average_high integer))
+
+
+# Insert data into the two tables
+
+# DEFINED TABLE VALUES AT TOP
+    cur.executemany("INSERT INTO cities VALUES(?,?)", cities)
+    cur.executemany("INSERT INTO weather VALUES(?,?,?,?,?)", weather)
+
+
+# Join the data together
+	cur.execute(SELECT name, state, year, warm_month, cold_month, average_high
+	FROM cities 
+	INNER JOIN weather 
+    	ON name = city)
+
+# Load into a pandas DataFrame
+
+	rows = cur.fetchall()
+  	cols = [desc[0] for desc in cur.description]
+  	df = pd.DataFrame(rows, columns=cols)
+
+# Print out the resulting city and state in a full sentence. For example: 
+# "The cities that are warmest in July are: Las Vegas, NV, Atlanta, GA..."
+
+#NOT SURE HOW TO DO THIS - I know how to write the SQL code to return the cities
+# that are hottest in July, but not sure how to then put them into the print code
+
+	cur.execute(SELECT name, state, warm_month
+	FROM cities 
+	INNER JOIN weather 
+    	ON name = city
+	WHERE warm_month="July");
+
+	# print("The cities that are the warmest in July are: [insert cities here somehow...]")
+
+
+
+
+
+# Push your code to Github and enter the link below
+
+# Submit your code using the link below. If you have trouble, be sure to 
+# review the material in this lesson, search online resources, and reach out to 
+# your mentor. Good luck!
+
+# Challenge
+# Try to write this script so the input can be more dynamic. Either take in the 
+# name of a month or have the user enter the value interactively. Query the 
+# database and return a result. Remember you'll have to handle all kinds of input. 
+# You take in command line input using the sys package. Don't spend too much time 
+# on this, especially if you've never programmed before. Dynamic input is one way 
+# to make code more functional but won't be a necessity going forward. You can find
+
+# STRAIGHT UP SQL CODE, NOT YET CONVERTED TO PYTHON
+
+# Create the cities and weather tables (HINT: first pass the statement DROP TABLE 
+# IF EXISTS <table_name>; to remove the table before you execute the CREATE TABLE ... statement)
+
+# DROP TABLE IF EXISTS cities
+# DROP TABLE IF EXISTS weather
 # CREATE TABLE cities (name text, state text);
 # CREATE TABLE weather(city text, year integer, warm_month text, cold_month text, average_high integer)
-	cur.execute(CREATE TABLE cities (name text, state text));
-	cur.execute(CREATE TABLE weather(city text, year integer, warm_month text, cold_month text, average_high integer));
+
 
 # Insert data into the two tables
 
@@ -64,66 +124,5 @@ with con:
 #     ('Seattle', 2013, 'July', 'January', 61),
 #     ('Portland', 2013, 'July', 'December', 63),
 #     ('San Francisco', 2013, 'September', 'December', 64),
-#     ('Los Angeles', 2013, 'September', 'December', 75);
-
-# DEFINED TABLE VALUES AT TOP
-    cur.executemany("INSERT INTO cities VALUES(?,?)", cities)
-    cur.executemany("INSERT INTO weather VALUES(?,?,?,?,?)", weather)
-
-
-# Join the data together
-	cur.execute(SELECT name, state, year, warm_month, cold_month, average_high
-	FROM cities 
-	INNER JOIN weather 
-    	ON name = city);
-
-# Load into a pandas DataFrame
-
-	rows = cur.fetchall()
-  	cols = [desc[0] for desc in cur.description]
-  	df = pd.DataFrame(rows, columns=cols)
-
-# Print out the resulting city and state in a full sentence. For example: 
-# "The cities that are warmest in July are: Las Vegas, NV, Atlanta, GA..."
-
-	# For Cities hottest in July
-	cur.execute(SELECT name, state, warm_month
-	FROM cities 
-	INNER JOIN weather 
-    	ON name = city)
-	WHERE warm_month="July";
-
-	for cities in name:
-	# print("The cities that are the warmest in July are {0}, {1}... ")
-	# WHAT DO I DO IF THE NUMBER OF CITIES ARE UNKNOWN?
-
-	# Hottest in August
-	cur.execute(SELECT name, state, warm_month
-	FROM cities 
-	INNER JOIN weather 
-    	ON name = city)
-	WHERE warm_month="August";
-
-	# Hottest in June
-	cur.execute(SELECT name, state, warm_month
-	FROM cities 
-	INNER JOIN weather 
-    	ON name = city)
-	WHERE warm_month="June";
-
-
-
-# Push your code to Github and enter the link below
-
-# Submit your code using the link below. If you have trouble, be sure to 
-# review the material in this lesson, search online resources, and reach out to 
-# your mentor. Good luck!
-
-# Challenge
-# Try to write this script so the input can be more dynamic. Either take in the 
-# name of a month or have the user enter the value interactively. Query the 
-# database and return a result. Remember you'll have to handle all kinds of input. 
-# You take in command line input using the sys package. Don't spend too much time 
-# on this, especially if you've never programmed before. Dynamic input is one way 
-# to make code more functional but won't be a necessity going forward. You can find 
+#     ('Los Angeles', 2013, 'September', 'December', 75); 
 # plenty of tutorials on how to accept user input online.
