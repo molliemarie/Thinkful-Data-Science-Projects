@@ -76,6 +76,10 @@ with con:
     #  
 
     # ANOTHER USER'S SOLUTION - seems like it could be simpler than this...
+
+    #index into df to get city, state pairs 
+    # warmest = zip(df["name"], df["state"])
+    
     # if len(warmest) == 1:
     #     print("The city that is warmest in {} is: ".format(user_month) +
     #           "{}, {}".format(warmest[0][0], warmest[0][1]))
