@@ -73,7 +73,19 @@ with con:
 	WHERE warm_month="July"''');
 
 	# print("The cities that are the warmest in July are: [insert cities here somehow...]")
-    #  
+    #  Maybe something like below?
+
+    city = df[0]
+    state = df[1]
+    warm_month = df[4]
+
+    for row in rows:
+    	if warm_month = "July":
+    		print("The cities that are hottest in July are: {0}, {1}".format(city, state))
+
+    
+
+
 
     # ANOTHER USER'S SOLUTION - seems like it could be simpler than this...
 
