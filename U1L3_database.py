@@ -45,11 +45,11 @@ with con:
 
 # Join the data together
 	cur.execute('''SELECT name, state, year, warm_month, cold_month, average_high
-				FROM cities 
-				INNER JOIN weather 
-    			ON name = city
-				WHERE warm_month="July"
-				ORDER BY average_high DESC''');
+					FROM cities 
+					INNER JOIN weather 
+					ON name = city
+					WHERE warm_month="July"
+					ORDER BY average_high DESC''');
 
 # Load into a pandas DataFrame
 
