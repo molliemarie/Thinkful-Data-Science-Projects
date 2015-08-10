@@ -21,22 +21,26 @@ plt.close()
 
 # Create and save boxplot
 bp = plt.boxplot(x)
-plt.xlabel('x-axis')
-plt.ylabel('y-axis')
-plt.title('Creative Boxplot Title')
+plt.xlabel('x')
+plt.ylabel('Values of x')
+plt.title('Distribution of x')
 plt.savefig("prob_boxplot.png")
 plt.close()
 
 # Create and save histogram
 import matplotlib.pyplot as plt
 plt.hist(x, histtype='bar')
-plt.xlabel('x-axis')
-plt.ylabel('y-axis')
-plt.title('Creative Histogram Title')
+plt.xlabel('Values of x')
+plt.ylabel('Frequencies of x')
+plt.title('Frequency of x')
 plt.savefig("prob_hitogram.png")
 plt.close()
 
  # Create and save QQ-Plot
 graph1 = stats.probplot(x, dist="norm", plot=plt)
+# plt.xlabel('x-axis')
+# plt.ylabel('y-axis')
+plt.title('QQ-Plot of X')
 plt.savefig("prob_qqplot.png")
+plt.close()
 
