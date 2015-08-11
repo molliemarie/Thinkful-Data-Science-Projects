@@ -24,7 +24,8 @@ plt.close()
 
 # histogram
 loansData.hist(column='Amount.Requested')
-plt.ylabel('Amount Requested ($)')
+plt.xlabel('Amount Requested ($)')
+plt.ylabel('Count')
 plt.title('Amount Requested by LendingClub in Dollars')
 plt.savefig("amount_requested_hist.png")
 plt.close()
