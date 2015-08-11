@@ -20,7 +20,7 @@ for k,v in c.items():
 plt.close()
 
 # Create and save boxplot
-bp = plt.boxplot(x)
+plt.boxplot(x)
 plt.xlabel('x')
 plt.ylabel('Values of x')
 plt.title('Distribution of x')
