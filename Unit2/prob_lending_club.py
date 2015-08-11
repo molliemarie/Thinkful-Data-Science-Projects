@@ -16,23 +16,24 @@ loansData.dropna(inplace=True)
 # Boxplot
 plt.close()
 loansData.boxplot(column='Amount.Requested')
+plt.ylabel('Amount Requested ($)')
+plt.xlabel(' ')
+plt.title('Amount Requested by LendingClub in Dollars')
 plt.savefig("amount_requested_boxplot.png")
-plt.ylabel('Amount Requested')
-plt.title('Amount Requested by LendingClub')
 plt.close()
 
 # histogram
 loansData.hist(column='Amount.Requested')
+plt.ylabel('Amount Requested ($)')
+plt.title('Amount Requested by LendingClub in Dollars')
 plt.savefig("amount_requested_hist.png")
-plt.ylabel('Amount Requested')
-plt.title('Amount Requested by LendingClub')
 plt.close()
 
 # QQ-plot
 plt.figure()
 graph = stats.probplot(loansData['Amount.Requested'], dist="norm", plot=plt)
+plt.title('Amount Requested by LendingClub in Dollars')
 plt.savefig("amount_requested_qqplot.png")
-plt.title('Amount Requested by LendingClub')
 plt.close()
 
 # Describe the result and how it compares with the values from the "Amount.Funded.By.Investors". 
