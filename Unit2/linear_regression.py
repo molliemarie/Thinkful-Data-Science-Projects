@@ -53,7 +53,11 @@ loansData['FICO.Score'] = cleanFICOScore
 # 15825    695
 # 33182    695
 # Name: FICO.Score, dtype: int64
+import matplotlib.pyplot as plt
 
+plt.figure()
+p = loansData['FICO.Score'].hist()
+plt.show()
 
 
 # FOR ANOTHER WAY TO DO THIS, following was posted below tutorial:
