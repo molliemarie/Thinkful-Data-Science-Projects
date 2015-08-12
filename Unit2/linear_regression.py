@@ -105,3 +105,5 @@ model = sm.OLS(y,X)
 f = model.fit()
 # results summary
 f.summary()
+  
+  
