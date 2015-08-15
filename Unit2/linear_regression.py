@@ -105,5 +105,9 @@ model = sm.OLS(y,X)
 f = model.fit()
 # results summary
 f.summary()
+
+# Load to new CSV file
+loansData.to_csv('loansData_clean.csv', header=True, index=False)
+
   
   
