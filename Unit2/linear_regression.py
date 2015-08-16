@@ -106,6 +106,25 @@ f = model.fit()
 # results summary
 f.summary()
 
+coeff = f.params
+
+# plot:
+line=[]
+line2 = []
+for j in fico:
+	line.append(coeff[0] + coeff[1]*j + coeff[2]*10000)
+	line2.append(coeff[0] + coeff[1]*j + coeff[2]*30000)
+
+plt.close()
+plt.scatter(fico,intrate)
+plt.hold(True)
+plt.plot(fico, line, label = '$10,000 Requested', color = 'blue')
+plt.plot(fico, line2, label = '$30,000 Requested', color = 'green')
+plt.legend(loc = 'upper right')
+plt.ylabel('Interest Rate in %')
+plt.xlabel('FICO Score')
+plt.save('Fico_Scatter_10000&30000.png')
+
 # Load to new CSV file
 loansData.to_csv('loansData_clean.csv', header=True, index=False)
 
