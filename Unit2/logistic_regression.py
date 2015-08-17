@@ -94,6 +94,7 @@ plt.plot(Fico, p, 'ro', label = 'Decision for 10000 USD')
 plt.legend(loc='upper right')
 plt.xlabel('Fico Score')
 plt.ylabel('Probability and decision, yes = 1, no = 0')
+plt.save('Fico_logisticRegression.png')
 
 # If you're feeling really adventurous, you can create a new function pred 
 # to predict whether or not we'll get the loan automatically.
