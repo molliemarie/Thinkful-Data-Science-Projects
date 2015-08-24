@@ -84,7 +84,7 @@ print(df.dot(df.dot(df.dot(df.dot(df2)))))
 
 df2=df
 for i in range(4): df2 = df2.dot(df)
-print('After four transitions:')
+print('After five transitions:')
 print(df2)
 
 
@@ -149,10 +149,10 @@ print(df2)
 # Black jack, google search 
 
 # Can you name examples that cannot be treated as Markov chains?
-# ?
+# 
 
 # Can you name an example of finite probabilistic states that cannot be modeled as Markov chains?
-# ?
+# 
 
 
 

@@ -19,7 +19,7 @@ loan_count_summary = year_month_summary['issue_d']
 # Is the series stationary? 
 # If not, what would you do to transform it into a stationary series?
 
-plt.plot(loan_count_summary)
+# plt.plot(loan_count_summary)
 
 # The series is increasing with time, so no, it's not stationary
 # We can differntiate it toget another time series that might be stationary in nature. 
@@ -27,7 +27,7 @@ plt.plot(loan_count_summary)
 loan_count_summary_diff = loan_count_summary.diff()
 loan_count_summary_diff = loan_count_summary_diff.fillna(0)
 
-plt.plot(loan_count_summary_diff)
+# plt.plot(loan_count_summary_diff)
 
 #To remove negative values, add 316 to all values.
 loan_count_summary_diff = loan_count_summary_diff + 316
@@ -49,7 +49,9 @@ sm.graphics.tsa.plot_pacf(loan_count_summary_diff)
 plt.savefig('PACF_loancount.png')
 
 # Are there any autocorrelated structures in the series? 
+
 # How would you have a model address these structures?
+# 
 
 # Ask Shubhabrata to discuss this.
 
