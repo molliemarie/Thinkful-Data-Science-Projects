@@ -8,6 +8,10 @@ import pandas as pd
 import collections
 from statistics import median
 import sqlite3 as lite
+# a package with datetime objects
+import time
+# a package for parsing a string into a Python datetime object
+from dateutil.parser import parse 
 
 
 r = requests.get('http://www.citibikenyc.com/stations/json')
@@ -151,6 +155,10 @@ con = lite.connect('citi_bike.db')
 cur = con.cursor()
 
 with con:
+	cur.execute("DROP TABLE IF EXISTS citibike_reference")
+	cur.execute("DROP TABLE IF EXISTS available_bikes")
+
+with con:
     cur.execute('''CREATE TABLE citibike_reference (
     	id INT PRIMARY KEY, 
     	totalDocks INT, 
@@ -201,12 +209,41 @@ with con:
 station_ids = df['id'].tolist() 
 
 #add the '_' to the station name and also add the data type for SQLite
-station_ids = ['_' + str(x) + ' INT' for x in station_ids) 
+station_ids = ['_' + str(x) + ' INT' for x in station_ids] 
 
 #create the table
 #in this case, we're concatentating the string and joining all the station ids (now with '_' and 'INT' added)
 with con:
-    cur.execute("CREATE TABLE available_bikes ( execution_time INT, " +  ", ".join(station_id) + ");")
+    cur.execute("CREATE TABLE available_bikes ( execution_time INT, " +  ", ".join(station_ids) + ");")
+
+# Now let's populate it with our values for available bikes:
+#take the string and parse it into a Python datetime object
+exec_time = parse(r.json()['executionTime'])
+
+# We create an entry for the execution time by inserting it into the database:
+with con:
+    cur.execute('INSERT INTO available_bikes (execution_time) VALUES (?)', (exec_time.strftime('%s'),))
+
+# Then we iterate through the stations in the "stationBeanList":
+id_bikes = collections.defaultdict(int) #defaultdict to store available bikes by station
+
+#loop through the stations in the station list
+for station in r.json()['stationBeanList']:
+    id_bikes[station['id']] = station['availableBikes']
+
+#iterate through the defaultdict to update the values in the database
+with con:
+    for k, v in id_bikes.items():
+        cur.execute("UPDATE available_bikes SET _" + str(k) + " = " + str(v) + " WHERE execution_time = " + exec_time.strftime('%s') + ";")
+
+# The function strftime() formats the time. It's alternate is strptime(), 
+# which is used to parse a string into the proper time format. For more on 
+# datetime objects in Python, check out the documentation.
+
+
+
+
+
 
 
 
