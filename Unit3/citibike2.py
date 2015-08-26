@@ -12,6 +12,7 @@ import sqlite3 as lite
 import time
 # a package for parsing a string into a Python datetime object
 from dateutil.parser import parse 
+import datetime
 
 r = requests.get('http://www.citibikenyc.com/stations/json')
 
@@ -116,7 +117,11 @@ con.close() #close the database connection when done
 # ANALYZING THE RESULTS
 
 # Reading in the data:
+con = lite.connect('citi_bike.db')
+cur = con.cursor()
+
 df = pd.read_sql_query("SELECT * FROM available_bikes ORDER BY execution_time",con,index_col='execution_time')
+
 
 # First you need to process each column and calculate the change each minute:
 hour_change = collections.defaultdict(int)
@@ -139,11 +144,10 @@ for col in df.columns:
 
 def keywithmaxval(d):
     # create a list of the dict's keys and values; 
-    v = list(d.values())
-    k = list(d.keys())
-
+	v = list(d.values())
+	k = list(d.keys())
     # return the key with the max value
-    return k[v.index(max(v))]
+	return(k[v.index(max(v))])
 
 # assign the max key to max_station
 max_station = keywithmaxval(hour_change)
@@ -154,8 +158,8 @@ max_station = keywithmaxval(hour_change)
 #query sqlite for reference information
 cur.execute("SELECT id, stationname, latitude, longitude FROM citibike_reference WHERE id = ?", (max_station,))
 data = cur.fetchone()
-print "The most active station is station id %s at %s latitude: %s longitude: %s " % data
-print "With " + str(hour_change[379]) + " bicycles coming and going in the hour between " + datetime.datetime.fromtimestamp(int(df.index[0])).strftime('%Y-%m-%dT%H:%M:%S') + " and " + datetime.datetime.fromtimestamp(int(df.index[-1])).strftime('%Y-%m-%dT%H:%M:%S')
+print("The most active station is station id %s at %s latitude: %s longitude: %s " % data)
+print("With " + str(hour_change[379]) + " bicycles coming and going in the hour between " + datetime.datetime.fromtimestamp(int(df.index[0])).strftime('%Y-%m-%dT%H:%M:%S') + " and " + datetime.datetime.fromtimestamp(int(df.index[-1])).strftime('%Y-%m-%dT%H:%M:%S'))
 
 # This should print out the result. 
 # Note that this will just print out the first station in the list that 
