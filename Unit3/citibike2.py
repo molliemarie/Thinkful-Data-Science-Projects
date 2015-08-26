@@ -95,7 +95,7 @@ with con:
 
 for i in range(60):
     
-    # r = requests.get('http://www.citibikenyc.com/stations/json')
+    r = requests.get('http://www.citibikenyc.com/stations/json')
     exec_time = parse(r.json()['executionTime'])
 
     cur.execute('INSERT INTO available_bikes (execution_time) VALUES (?)', (exec_time.strftime('%s'),))
@@ -107,11 +107,35 @@ for i in range(60):
 
     for k, v in id_bikes.items():
         cur.execute("UPDATE available_bikes SET _" + str(k) + " = " + str(v) + " WHERE execution_time = " + exec_time.strftime('%s') + ";")
+   	# for k, v in id_bikes.items():
+    #     print("UPDATE available_bikes SET _" + str(k) + " = " + str(v) + " WHERE execution_time = " + exec_time.strftime('%s') + ";")
+    
+
     con.commit()
 
     time.sleep(60)
 
 con.close() #close the database connection when done
+
+# for i in range(60):
+    
+#     r = requests.get('http://www.citibikenyc.com/stations/json')
+#     exec_time = parse(r.json()['executionTime'])
+
+#     cur.execute('INSERT INTO available_bikes (execution_time) VALUES (?)', (exec_time.strftime('%s'),))
+#     con.commit()
+
+#     # id_bikes = collections.defaultdict(int)
+#     for station in r.json()['stationBeanList']:
+#         # id_bikes[station['id']] = station['availableBikes']
+#         k = station['id']; v = station['availableBikes']
+#     # for k, v in id_bikes.items():
+#         cur.execute("UPDATE available_bikes SET _" + str(k) + " = " + str(v) + " WHERE execution_time = " + exec_time.strftime('%s') + ";")
+#     con.commit()
+
+#     time.sleep(60)
+
+# con.close() #close the database connection when done
 
 
 # ANALYZING THE RESULTS
@@ -124,7 +148,7 @@ df = pd.read_sql_query("SELECT * FROM available_bikes ORDER BY execution_time",c
 
 
 # First you need to process each column and calculate the change each minute:
-hour_change = collections.defaultdict(int)
+hour_change = collections.defaultdict(int) #default zero, 
 for col in df.columns:
     station_vals = df[col].tolist()
     station_id = col[1:] #trim the "_"
@@ -132,6 +156,8 @@ for col in df.columns:
     for k,v in enumerate(station_vals):
         if k < len(station_vals) - 1:
             station_change += abs(station_vals[k] - station_vals[k+1])
+        #if k:
+        	# station_change += abs(v - station_vals[k-1])
     hour_change[int(station_id)] = station_change #convert the station id back to integer
 
 # The enumerate() function returns not only the item in the list but 
@@ -142,12 +168,17 @@ for col in df.columns:
 # At this point, the values are in the dictionary keyed on the station ID. 
 # To find the winner:
 
-def keywithmaxval(d):
-    # create a list of the dict's keys and values; 
-	v = list(d.values())
-	k = list(d.keys())
-    # return the key with the max value
-	return(k[v.index(max(v))])
+# def keywithmaxval(d):
+#     # create a list of the dict's keys and values; 
+# 	v = list(d.values())
+# 	k = list(d.keys())
+#     # return the key with the max value
+# 	return(k[v.index(max(v))])
+
+def keywithmaxval(d): 
+	return max(d,key=lambda k:d[k])
+	# max d would just be max station code, whereas here we need the station key with the max change
+
 
 # assign the max key to max_station
 max_station = keywithmaxval(hour_change)
@@ -159,7 +190,7 @@ max_station = keywithmaxval(hour_change)
 cur.execute("SELECT id, stationname, latitude, longitude FROM citibike_reference WHERE id = ?", (max_station,))
 data = cur.fetchone()
 print("The most active station is station id %s at %s latitude: %s longitude: %s " % data)
-print("With " + str(hour_change[379]) + " bicycles coming and going in the hour between " + datetime.datetime.fromtimestamp(int(df.index[0])).strftime('%Y-%m-%dT%H:%M:%S') + " and " + datetime.datetime.fromtimestamp(int(df.index[-1])).strftime('%Y-%m-%dT%H:%M:%S'))
+print("With " + str(hour_change[max_station]) + " bicycles coming and going in the hour between " + datetime.datetime.fromtimestamp(int(df.index[0])).strftime('%Y-%m-%dT%H:%M:%S') + " and " + datetime.datetime.fromtimestamp(int(df.index[-1])).strftime('%Y-%m-%dT%H:%M:%S'))
 
 # This should print out the result. 
 # Note that this will just print out the first station in the list that 
