@@ -6,9 +6,9 @@ cities = { "Minneapolis": '44.963324,-3.268320',
             "San Francisco": '37.727239,-123.032229',
             "Sioux Falls": '43.550116, -96.729280',
             "Tipton": '42.015974, -84.064363',
-            "Pheonix": '33.572154,-112.090132',
-            "Abu Dhabi": '24.483103, 54.353026',
-            "Fehmarn": '54.465705, 11.136710'
+            "Pheonix": '33.572154,-112.090132'
+            # "Abu Dhabi": '24.483103, 54.353026',
+            # "Fehmarn": '54.465705, 11.136710'
         }
 
 
@@ -52,6 +52,7 @@ cities.keys()
 
 	# Create table
 with con:
+    cur.execute("DROP TABLE IF EXISTS daily_temp")
     cur.execute('CREATE TABLE daily_temp ( day_of_reading INT, city1 REAL, city2 REAL, city3 REAL, city4 REAL, city5 REAL);') #use your own city names instead of city1...
 	# In SQL, a row has to be inserted before it can be updated. In order 
 	# to keep the code clean, we're going to iterate through the values in 
@@ -67,18 +68,7 @@ with con:
 for k,v in cities.items():
     query_date = end_date - datetime.timedelta(days=30) #set value each time through the loop of cities
     while query_date < end_date:
-        #query for the value
-        r = requests.get(url + v + ',' +  query_date.strftime('%Y-%m-%dT12:00:00'))
-
-        with con:
-            #insert the temperature max to the database
-            cur.execute('UPDATE daily_temp SET ' + k + ' = ' + str(r.json()['daily']['data'][0]['temperatureMax']) + ' WHERE day_of_reading = ' + query_date.strftime('%s'))
-
-        #increment query_date to the next day for next operation of loop
-        query_date += datetime.timedelta(days=1) #increment query_date to the next day
-
-
-con.close() # a good practice to close connection to database
+        #q
 
 
 # Write a script that takes each city and queries every day for the past 
@@ -86,7 +76,18 @@ con.close() # a good practice to close connection to database
 # 	the value by day)
 
 # Save the max temperature values to the table, keyed on the date. You can 
-# leave the date in Unix time or convert to a string.
+# uery for the value
+    r = requests.get(URL + v + ',' +  query_date.strftime('%Y-%m-%dT12:00:00'))
+
+    with con:
+            #insert the temperature max to the database
+        cur.execute('UPDATE daily_temp SET ' + k + ' = ' + str(r.json()['daily']['data'][0]['temperatureMax']) + ' WHERE day_of_reading = ' + query_date.strftime('%s'))
+
+        #increment query_date to the next day for next operation of loop
+    query_date += datetime.timedelta(days=1) #increment query_date to the next day
+
+
+con.close() # a good practice to close connection to database# leave the date in Unix time or convert to a string.
 
 
 
