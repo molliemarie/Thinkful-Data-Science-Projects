@@ -3,8 +3,8 @@ import requests
 import datetime
 
 cities = { "Minneapolis": '44.963324,-3.268320',
-            "San Francisco": '37.727239,-123.032229',
-            "Sioux Falls": '43.550116, -96.729280',
+            "San_Francisco": '37.727239,-123.032229',
+            "Sioux_Falls": '43.550116, -96.729280',
             "Tipton": '42.015974, -84.064363',
             "Pheonix": '33.572154,-112.090132'
             # "Abu Dhabi": '24.483103, 54.353026',
@@ -53,7 +53,7 @@ cities.keys()
 	# Create table
 with con:
     cur.execute("DROP TABLE IF EXISTS daily_temp")
-    cur.execute('CREATE TABLE daily_temp ( day_of_reading INT, city1 REAL, city2 REAL, city3 REAL, city4 REAL, city5 REAL);') #use your own city names instead of city1...
+    cur.execute('CREATE TABLE daily_temp ( day_of_reading INT, Minneapolis REAL, San_Francisco REAL, Sioux_Falls REAL, Tipton REAL, Pheonix REAL);') #use your own city names instead of city1...
 	# In SQL, a row has to be inserted before it can be updated. In order 
 	# to keep the code clean, we're going to iterate through the values in 
 	# the range and insert them into the database without any other values
