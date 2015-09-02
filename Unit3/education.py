@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 from statistics import median
+import matplotlib.pyplot as plt
+import csv
 
 # Import pages
 url = "http://web.archive.org/web/20110514112442/http://unstats.un.org/unsd/demographic/products/socind/education.htm"
@@ -50,13 +52,71 @@ for rows in B:
     table = pd.DataFrame(records, columns = column_name )
 
 # As we have with the previous assignments, look at the distribution 
-# of values for each attribute. Anything in particular stand out at 
-# you? What's the median age and the mean age for each gender? Which 
-# do you think is more appropriate for this dataset?
+# of values for each attribute. 
+
+# Histogram of male ages
+plt.figure()
+(table['men'].astype(int)).hist()
+plt.title('Male School Life Expentancy Histogram')
+plt.xlabel('Age')
+plt.ylabel('Count')
+plt.show()
+
+# Histogram of female ages
+plt.close()
+plt.figure()
+(table['women'].astype(int)).hist()
+plt.title('Women School Life Expentancy Histogram')
+plt.xlabel('Age')
+plt.ylabel('Count')
+plt.show()
+
+# Anything in particular stand out at you? 
+# The male ages are distributed more normally, while with females
+# There are two distinct peaks at ages 12-15.
+
+# What's the median age and the mean age for each gender? 
 
 # Mean age men
-sum(table['men'].astype(int))/len(table['men'].astype(int))
-# Out[117]: 12.24468085106383
+(table['men'].astype(int)).mean()
+# Out[162]: 12.24468085106383
+
+# Median age men
+median(table['men'].astype(int))
+# Out[121]: 12.0
+
+# Mean age women
+(table['women'].astype(int)).mean()
+# Out[161]: 12.372340425531915
+
+# Median age women
+median(table['women'].astype(int))
+# Out[125]: 13.0
+
+# # Which do you think is more appropriate for this dataset?
+# I think the median is more appropriate for this dataset 
+
+
+
+# You're going to compare the school life expectancy statistics 
+# you scraped in the previous assignment to national gross domestic 
+# product data from the World Bank.
+
+# With a file like this, it's best to read in the file line by line 
+# using the technique you were introduced to in the very beginning of 
+# the course:
+
+with open('ny.gdp.mktp.cd_Indicator_en_csv_v2/ny.gdp.mktp.cd_Indicator_en_csv_v2.csv','rU') as inputFile:
+    next(inputFile) # skip the first two lines
+    next(inputFile)
+    header = next(inputFile)
+    inputReader = csv.reader(inputFile)
+    for line in inputReader:
+        with con:
+            cur.execute('INSERT INTO gdp (country_name, _1999, _2000, _2001, _2002, _2003, _2004, _2005, _2006, _2007, _2008, _2009, _2010) VALUES ("' + line[0] + '","' + '","'.join(line[42:-5]) + '");')
+
+
+
 
 
 
