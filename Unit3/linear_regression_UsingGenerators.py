@@ -17,8 +17,7 @@ loansData = pd.read_csv('https://spark-public.s3.amazonaws.com/dataanalysis/loan
 
 # Split into numbers - will return in form [###, ###]
 cleanFICORange = loansData['FICO.Range'].map(lambda x: x.split('-'))
-cleanFICORange = loansData['FICO.Range'][x.split('-') for x]
-# Which of the following is more readable? This:
+cleanFICORange = [x.split('-') for x in loansData['FICO.Range'].tolist()]
 
 # map(lambda x: x**2, xrange(10))
 # or this?
@@ -46,6 +45,8 @@ cleanFICORange = loansData['FICO.Range'][x.split('-') for x]
 # To do this, we use a list comprehension
 # The "[0]" at the end makes it so that we only choose the first element
 cleanFICOScore = cleanFICORange.map(lambda x: [int(n) for n in x][0])
+cleanFICOScore = [int(n) for n in x][0] for x in cleanFICORange.tolist()]
+
 
 # Results:
 # print(cleanFICORange.head(5))
@@ -82,10 +83,12 @@ plt.close()
 
 # CLEAN INTEREST RATE DATA
 clean_ir = loansData["Interest.Rate"].map(lambda x: round(float(x.rstrip("%"))/100, 4))
+# Unsure how to change this one, since it has extra inputs...
 loansData["Interest.Rate"] = clean_ir
 
 # CLEAN LOAN LENGTH DATA
 clean_loanLength = loansData["Loan.Length"].map(lambda x: float(x.rstrip("months")))
+clean_loanLength = [float(x.rstrip("months") for x in loansData["Loan.Length"]]
 loansData["Loan.Length"] = clean_loanLength
 
 # LINEAR REGRESSION!

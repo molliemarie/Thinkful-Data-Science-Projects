@@ -106,6 +106,14 @@ median(table['women'].astype(int))
 # using the technique you were introduced to in the very beginning of 
 # the course:
 
+con = lite.connect('education.db')
+cur = con.cursor()
+
+with con:
+    cur.execute("DROP TABLE IF EXISTS daily_temp")
+    # cur.execute('CREATE TABLE ddp ( day_of_reading INT, Minneapolis REAL, San_Francisco REAL, Sioux_Falls REAL, Tipton REAL, Pheonix REAL);') #use your own city names instead of city1...
+	
+
 with open('ny.gdp.mktp.cd_Indicator_en_csv_v2/ny.gdp.mktp.cd_Indicator_en_csv_v2.csv','rU') as inputFile:
     next(inputFile) # skip the first two lines
     next(inputFile)
