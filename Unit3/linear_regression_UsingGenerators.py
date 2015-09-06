@@ -16,7 +16,7 @@ loansData = pd.read_csv('https://spark-public.s3.amazonaws.com/dataanalysis/loan
 # 33182    695-699
 
 # Split into numbers - will return in form [###, ###]
-cleanFICORange = loansData['FICO.Range'].map(lambda x: x.split('-'))
+# cleanFICORange = loansData['FICO.Range'].map(lambda x: x.split('-'))
 cleanFICORange = [x.split('-') for x in loansData['FICO.Range'].tolist()]
 
 # map(lambda x: x**2, xrange(10))
@@ -44,9 +44,8 @@ cleanFICORange = [x.split('-') for x in loansData['FICO.Range'].tolist()]
 # We have a string inside a list. Need to convert each string to integer
 # To do this, we use a list comprehension
 # The "[0]" at the end makes it so that we only choose the first element
-cleanFICOScore = cleanFICORange.map(lambda x: [int(n) for n in x][0])
-cleanFICOScore = [int(n) for n in x][0] for x in cleanFICORange.tolist()]
-
+# cleanFICOScore = cleanFICORange.map(lambda x: [int(n) for n in x][0])
+cleanFICOScore = [[int(n) for n in x][0] for x in cleanFICORange]
 
 # Results:
 # print(cleanFICORange.head(5))
@@ -82,9 +81,8 @@ plt.close()
 
 
 # CLEAN INTEREST RATE DATA
-clean_ir = loansData["Interest.Rate"].map(lambda x: round(float(x.rstrip("%"))/100, 4))
-# Unsure how to change this one, since it has extra inputs...
-loansData["Interest.Rate"] = clean_ir
+# clean_ir = loansData["Interest.Rate"].map(lambda x: round(float(x.rstrip("%"))/100, 4))
+clean_ir = [round(float(x.rstrip("%"))/100, 4) for x in loansData["Interest.Rate"]]loansData["Interest.Rate"] = clean_ir
 
 # CLEAN LOAN LENGTH DATA
 clean_loanLength = loansData["Loan.Length"].map(lambda x: float(x.rstrip("months")))
